@@ -127,12 +127,14 @@ class App {
   }
 
   async #loadTextures() {
-    const [noise] = await textureLoader.load(['/noise.png'])
+    const [noise, matcapA, matcapB] = await textureLoader.load(['/noise.png', '/matcap_A.png', '/matcap_B.png'])
 
     noise.wrapS = noise.wrapT = RepeatWrapping
 
     this.textures = {
-      noise
+      noise,
+      matcapA,
+      matcapB
     }
   }
 
@@ -146,6 +148,8 @@ class App {
 
     this.mesh.material = MatcapSwitchMaterial
     this.mesh.material.uniforms.t_Noise.value = this.textures.noise
+    this.mesh.material.uniforms.t_MatcapA.value = this.textures.matcapA
+    this.mesh.material.uniforms.t_MatcapB.value = this.textures.matcapB
 
     this.scene.add(this.mesh)
   }

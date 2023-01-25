@@ -41,6 +41,8 @@ export class Debug {
     folder.addInput(material.uniforms.u_EffectProgress, 'value', { label: 'Progress', min: -1, max: 1 })
     folder.addInput(material.uniforms.u_StripSize, 'value', { label: 'Size', min: 0.02, max: 0.5 })
     folder.addInput(material.uniforms.u_NoiseStrength, 'value', { label: 'Noise strength', min: 0.01, max: 2 })
+
+    this.#createColorUniformControl(mesh, folder, 'u_EmissionColor', 'Emission Color')
   }
 
   #createPhysicsConfig() {
