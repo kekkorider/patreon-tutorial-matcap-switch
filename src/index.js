@@ -3,10 +3,7 @@ import {
   Scene,
   WebGLRenderer,
   PerspectiveCamera,
-  BoxGeometry,
-  MeshStandardMaterial,
   Mesh,
-  PointLight,
   Clock,
   Vector2,
   PlaneGeometry,
@@ -15,7 +12,7 @@ import {
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
-import { SampleShaderMaterial } from './materials/SampleShaderMaterial'
+import { MatcapSwitchMaterial } from './materials/MatcapSwitchMaterial'
 import { gltfLoader } from './loaders'
 
 class App {
@@ -44,9 +41,6 @@ class App {
       Object.assign(this, { PhysicsBox, PhysicsFloor })
     }
 
-    this.#createBox()
-    this.#createShadedBox()
-    this.#createLight()
     this.#createFloor()
     this.#createClock()
     this.#addListeners()
@@ -83,9 +77,6 @@ class App {
   #update() {
     const elapsed = this.clock.getElapsedTime()
 
-    this.shadedBox.rotation.y = elapsed
-    this.shadedBox.rotation.z = elapsed*0.6
-
     this.simulation?.update()
   }
 
@@ -99,7 +90,7 @@ class App {
 
   #createCamera() {
     this.camera = new PerspectiveCamera(75, this.screen.x / this.screen.y, 0.1, 100)
-    this.camera.position.set(-0.7, 0.8, 3)
+    this.camera.position.set(-0.2, 0.3, 1.5)
   }
 
   #createRenderer() {
@@ -114,52 +105,6 @@ class App {
     this.renderer.setPixelRatio(Math.min(1.5, window.devicePixelRatio))
     this.renderer.setClearColor(0x121212)
     this.renderer.physicallyCorrectLights = true
-  }
-
-  #createLight() {
-    this.pointLight = new PointLight(0xff0055, 500, 100, 2)
-    this.pointLight.position.set(0, 10, 13)
-    this.scene.add(this.pointLight)
-  }
-
-  /**
-   * Create a box with a PBR material
-   */
-  #createBox() {
-    const geometry = new BoxGeometry(1, 1, 1, 1, 1, 1)
-
-    const material = new MeshStandardMaterial({
-      color: 0xffffff,
-      metalness: 0.7,
-      roughness: 0.35
-    })
-
-    this.box = new Mesh(geometry, material)
-    this.box.position.x = -1.5
-    this.box.rotation.set(
-      Math.random() * Math.PI,
-      Math.random() * Math.PI,
-      Math.random() * Math.PI
-    )
-
-    this.scene.add(this.box)
-
-    if (!this.hasPhysics) return
-
-    const body = new this.PhysicsBox(this.box, this.scene)
-    this.simulation.addItem(body)
-  }
-
-  /**
-   * Create a box with a custom ShaderMaterial
-   */
-  #createShadedBox() {
-    const geometry = new BoxGeometry(1, 1, 1, 1, 1, 1)
-
-    this.shadedBox = new Mesh(geometry, SampleShaderMaterial)
-    this.shadedBox.position.x = 1.5
-
-    this.scene.add(this.shadedBox)
   }
 
   #createFloor() {
@@ -185,10 +130,8 @@ class App {
     const gltf = await gltfLoader.load('/suzanne.glb')
 
     const mesh = gltf.scene.children[0]
-    mesh.position.z = 1.5
 
-    mesh.material = SampleShaderMaterial.clone()
-    mesh.material.wireframe = true
+    mesh.material = MatcapSwitchMaterial
 
     this.scene.add(mesh)
   }
