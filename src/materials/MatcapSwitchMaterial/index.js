@@ -11,5 +11,8 @@ export const MatcapSwitchMaterial = new ShaderMaterial({
   uniforms: {
     u_EffectProgress: { value: 0 },
     u_StripSize: { value: 0.1 },
+    u_Time: { value: 0 },
+    t_Noise: { value: null },
+    u_NoiseStrength: { value: 0.5 },
   }
 })

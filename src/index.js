@@ -1,4 +1,3 @@
-
 import {
   Scene,
   WebGLRenderer,
@@ -7,13 +6,14 @@ import {
   Clock,
   Vector2,
   PlaneGeometry,
-  MeshBasicMaterial
+  MeshBasicMaterial,
+  RepeatWrapping
 } from 'three'
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 import { MatcapSwitchMaterial } from './materials/MatcapSwitchMaterial'
-import { gltfLoader } from './loaders'
+import { gltfLoader, textureLoader } from './loaders'
 
 class App {
   #resizeCallback = () => this.#onResize()
@@ -46,6 +46,7 @@ class App {
     this.#addListeners()
     this.#createControls()
 
+    await this.#loadTextures()
     await this.#loadModel()
 
     if (this.hasDebug) {
@@ -76,6 +77,8 @@ class App {
 
   #update() {
     const elapsed = this.clock.getElapsedTime()
+
+    this.mesh.material.uniforms.u_Time.value = elapsed
 
     this.simulation?.update()
   }
@@ -123,17 +126,28 @@ class App {
     this.simulation.addItem(body)
   }
 
+  async #loadTextures() {
+    const [noise] = await textureLoader.load(['/noise.png'])
+
+    noise.wrapS = noise.wrapT = RepeatWrapping
+
+    this.textures = {
+      noise
+    }
+  }
+
   /**
    * Load a 3D model and append it to the scene
    */
   async #loadModel() {
     const gltf = await gltfLoader.load('/suzanne.glb')
 
-    const mesh = gltf.scene.children[0]
+    this.mesh = gltf.scene.children[0]
 
-    mesh.material = MatcapSwitchMaterial
+    this.mesh.material = MatcapSwitchMaterial
+    this.mesh.material.uniforms.t_Noise.value = this.textures.noise
 
-    this.scene.add(mesh)
+    this.scene.add(this.mesh)
   }
 
   #createControls() {
