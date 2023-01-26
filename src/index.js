@@ -15,7 +15,7 @@ import {
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
-import { BloomEffect, EffectComposer, EffectPass, RenderPass } from 'postprocessing'
+import { SMAAEffect, BloomEffect, EffectComposer, EffectPass, RenderPass } from 'postprocessing'
 
 import { MatcapSwitchMaterial } from './materials/MatcapSwitchMaterial'
 import { gltfLoader, textureLoader } from './loaders'
@@ -126,6 +126,9 @@ class App {
 
     const bloomPass = new EffectPass(this.camera, new BloomEffect({ intensity: 0.65, luminanceThreshold: 0.57, luminanceSmoothing: 0.35 }))
     this.composer.addPass(bloomPass)
+
+    const smaaPass = new EffectPass(this.camera, new SMAAEffect())
+    this.composer.addPass(smaaPass)
   }
 
   #createFloor() {
