@@ -15,10 +15,10 @@ import {
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
-import { SMAAEffect, BloomEffect, EffectComposer, EffectPass, RenderPass } from 'postprocessing'
+import { BlendFunction, LUT3DEffect, SMAAEffect, BloomEffect, EffectComposer, EffectPass, RenderPass } from 'postprocessing'
 
 import { MatcapSwitchMaterial } from './materials/MatcapSwitchMaterial'
-import { gltfLoader, textureLoader } from './loaders'
+import { gltfLoader, lutCubeLoader, textureLoader } from './loaders'
 
 class App {
   #resizeCallback = () => this.#onResize()
@@ -100,7 +100,7 @@ class App {
 
   #createCamera() {
     this.camera = new PerspectiveCamera(75, this.screen.x / this.screen.y, 0.1, 100)
-    this.camera.position.set(-0.2, 0.3, 1.5)
+    this.camera.position.set(-0.6, 0.3, 1.2)
   }
 
   #createRenderer() {
@@ -129,6 +129,13 @@ class App {
 
     const smaaPass = new EffectPass(this.camera, new SMAAEffect())
     this.composer.addPass(smaaPass)
+
+    const blendFunction = BlendFunction.COLOR
+    const lutEffect = this.renderer.capabilities.isWebGL2 ?
+                                      new LUT3DEffect(this.textures.lut, { blendFunction }) :
+                                      new LUT3DEffect(this.textures.lut.convertToUint8().toDataTexture(), { blendFunction })
+    const lutPass = new EffectPass(this.camera, lutEffect)
+    this.composer.addPass(lutPass)
   }
 
   #createFloor() {
@@ -152,10 +159,13 @@ class App {
 
     noise.wrapS = noise.wrapT = RepeatWrapping
 
+    const [lut] = await lutCubeLoader.load(['/Lenox-340.CUBE'])
+
     this.textures = {
       noise,
       matcapA,
-      matcapB
+      matcapB,
+      lut
     }
   }
 

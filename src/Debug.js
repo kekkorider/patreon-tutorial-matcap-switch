@@ -9,7 +9,8 @@ export class Debug {
     this.#createSceneConfig()
     this.#createPhysicsConfig()
     this.#createEffectConfig()
-    this.#createPostprocessConfig()
+    this.#createBloomConfig()
+    this.#createLUTConfig()
   }
 
   refresh() {
@@ -47,7 +48,7 @@ export class Debug {
     this.#createColorUniformControl(mesh, folder, 'u_EmissionColorB', 'Emission Color B')
   }
 
-  #createPostprocessConfig() {
+  #createBloomConfig() {
     const folder = this.pane.addFolder({ title: 'Postprocess - Bloom' })
     const bloomPass = this.app.composer.passes[1]
     const [bloomEffect] = bloomPass.effects
@@ -56,6 +57,14 @@ export class Debug {
     folder.addInput(bloomEffect, 'intensity', { label: 'Intensity', min: 0, max: 3 })
     folder.addInput(luminanceUniforms.threshold, 'value', { label: 'Threshold', min: 0, max: 1 })
     folder.addInput(luminanceUniforms.smoothing, 'value', { label: 'Smoothing', min: 0, max: 1 })
+  }
+
+  #createLUTConfig() {
+    const folder = this.pane.addFolder({ title: 'Postprocess - LUT' })
+    const lutPass = this.app.composer.passes[3]
+    const [lutEffect] = lutPass.effects
+
+    folder.addInput(lutEffect.blendMode.opacity, 'value', { label: 'Intensity', min: 0, max: 1 })
   }
 
   #createPhysicsConfig() {

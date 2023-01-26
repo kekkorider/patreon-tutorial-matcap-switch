@@ -1,6 +1,7 @@
 import { LoadingManager } from 'three'
 import { TextureLoader } from './TextureLoader'
 import { GLTFLoader } from './GLTFLoader'
+import { LUTCubeLoader } from './LUTCubeLoader'
 
 /**
  * Loading manager
@@ -22,3 +23,8 @@ export const textureLoader = new TextureLoader(loadingManager)
  * GLTF Models
  */
 export const gltfLoader = new GLTFLoader(loadingManager)
+
+/**
+ * LUT Cube Loader
+ */
+export const lutCubeLoader = new LUTCubeLoader(loadingManager)
