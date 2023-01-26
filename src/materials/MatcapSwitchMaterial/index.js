@@ -17,6 +17,6 @@ export const MatcapSwitchMaterial = new ShaderMaterial({
     t_Noise: { value: null },
     t_MatcapA: { value: null },
     t_MatcapB: { value: null },
-    u_NoiseStrength: { value: 1.35 },
+    u_NoiseStrength: { value: 2 },
   }
 })

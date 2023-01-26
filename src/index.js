@@ -8,10 +8,14 @@ import {
   PlaneGeometry,
   MeshBasicMaterial,
   RepeatWrapping,
-  BufferAttribute
+  BufferAttribute,
+  sRGBEncoding,
+  HalfFloatType
 } from 'three'
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+
+import { BloomEffect, EffectComposer, EffectPass, RenderPass } from 'postprocessing'
 
 import { MatcapSwitchMaterial } from './materials/MatcapSwitchMaterial'
 import { gltfLoader, textureLoader } from './loaders'
@@ -50,6 +54,8 @@ class App {
     await this.#loadTextures()
     await this.#loadModel()
 
+    this.#createPostprocess()
+
     if (this.hasDebug) {
       const { Debug } = await import('./Debug.js')
       new Debug(this)
@@ -85,7 +91,7 @@ class App {
   }
 
   #render() {
-    this.renderer.render(this.scene, this.camera)
+    this.composer.render()
   }
 
   #createScene() {
@@ -99,16 +105,27 @@ class App {
 
   #createRenderer() {
     this.renderer = new WebGLRenderer({
-      alpha: true,
-      antialias: window.devicePixelRatio === 1
+      alpha: false,
+      powerPreference: "high-performance",
+      antialias: false
     })
+
 
     this.container.appendChild(this.renderer.domElement)
 
     this.renderer.setSize(this.screen.x, this.screen.y)
     this.renderer.setPixelRatio(Math.min(1.5, window.devicePixelRatio))
-    this.renderer.setClearColor(0x121212)
-    this.renderer.physicallyCorrectLights = true
+    this.renderer.setClearColor(0x000000)
+    this.renderer.outputEncoding = sRGBEncoding
+  }
+
+  #createPostprocess() {
+    this.composer = new EffectComposer(this.renderer, { frameBufferType: HalfFloatType })
+
+    this.composer.addPass(new RenderPass(this.scene, this.camera))
+
+    const bloomPass = new EffectPass(this.camera, new BloomEffect({ intensity: 0.65, luminanceThreshold: 0.57, luminanceSmoothing: 0.35 }))
+    this.composer.addPass(bloomPass)
   }
 
   #createFloor() {
@@ -197,6 +214,7 @@ class App {
     this.camera.updateProjectionMatrix()
 
     this.renderer.setSize(this.screen.x, this.screen.y)
+    this.composer.setSize(this.screen.x, this.screen.y)
   }
 }
 

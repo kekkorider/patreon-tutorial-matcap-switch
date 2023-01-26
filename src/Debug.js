@@ -9,6 +9,7 @@ export class Debug {
     this.#createSceneConfig()
     this.#createPhysicsConfig()
     this.#createEffectConfig()
+    this.#createPostprocessConfig()
   }
 
   refresh() {
@@ -44,6 +45,17 @@ export class Debug {
 
     this.#createColorUniformControl(mesh, folder, 'u_EmissionColorA', 'Emission Color A')
     this.#createColorUniformControl(mesh, folder, 'u_EmissionColorB', 'Emission Color B')
+  }
+
+  #createPostprocessConfig() {
+    const folder = this.pane.addFolder({ title: 'Postprocess - Bloom' })
+    const bloomPass = this.app.composer.passes[1]
+    const [bloomEffect] = bloomPass.effects
+    const { uniforms: luminanceUniforms } = bloomEffect.luminanceMaterial
+
+    folder.addInput(bloomEffect, 'intensity', { label: 'Intensity', min: 0, max: 3 })
+    folder.addInput(luminanceUniforms.threshold, 'value', { label: 'Threshold', min: 0, max: 1 })
+    folder.addInput(luminanceUniforms.smoothing, 'value', { label: 'Smoothing', min: 0, max: 1 })
   }
 
   #createPhysicsConfig() {

@@ -51,8 +51,9 @@ void main(){
 
   float maskBottom=1.-step(-u_StripSize,maskPositionY);
 
-  // Set the color of the central strip based on the value of `maskPositionY`
-  vec3 emission = mix(u_EmissionColorB, u_EmissionColorA, step(0.0, maskPositionY));
+  // Set the color of the central strip based on the value of `maskPositionY`.
+  // We add the emission colors twice to make the bloom kick in.
+  vec3 emission = mix(u_EmissionColorB+u_EmissionColorB, u_EmissionColorA+u_EmissionColorA, step(0.0, maskPositionY));
 
   //
   // Final color
