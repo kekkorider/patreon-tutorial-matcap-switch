@@ -14,6 +14,22 @@ body {
   outline: none;
 }
 
+#vignette {
+  background: radial-gradient(
+    circle,
+    rgba(0, 0, 0, 0) 15%,
+    rgba(0, 0, 0, 0.6502976190476191) 75%,
+    rgba(0, 0, 0, 1) 100%
+  );
+  height: 100%;
+  left: 0;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 5;
+}
+
 #debug {
   position: fixed;
   right: 10px;

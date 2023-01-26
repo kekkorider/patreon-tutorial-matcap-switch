@@ -115,7 +115,7 @@ class App {
 
     this.renderer.setSize(this.screen.x, this.screen.y)
     this.renderer.setPixelRatio(Math.min(1.5, window.devicePixelRatio))
-    this.renderer.setClearColor(0x000000)
+    this.renderer.setClearColor(0x030303)
     this.renderer.outputEncoding = sRGBEncoding
   }
 
