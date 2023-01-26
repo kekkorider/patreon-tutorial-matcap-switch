@@ -87,6 +87,8 @@ class App {
 
     this.mesh.material.uniforms.u_Time.value = elapsed
 
+    this.controls.update()
+
     this.simulation?.update()
   }
 
@@ -100,7 +102,7 @@ class App {
 
   #createCamera() {
     this.camera = new PerspectiveCamera(75, this.screen.x / this.screen.y, 0.1, 100)
-    this.camera.position.set(-0.6, 0.3, 1.2)
+    this.camera.position.set(0, 0.3, 1.4)
   }
 
   #createRenderer() {
@@ -124,7 +126,7 @@ class App {
 
     this.composer.addPass(new RenderPass(this.scene, this.camera))
 
-    const bloomPass = new EffectPass(this.camera, new BloomEffect({ intensity: 0.65, luminanceThreshold: 0.57, luminanceSmoothing: 0.35 }))
+    const bloomPass = new EffectPass(this.camera, new BloomEffect({ intensity: 0.55, luminanceThreshold: 0.21, luminanceSmoothing: 0.65 }))
     this.composer.addPass(bloomPass)
 
     const smaaPass = new EffectPass(this.camera, new SMAAEffect())
@@ -206,6 +208,9 @@ class App {
 
   #createControls() {
     this.controls = new OrbitControls(this.camera, this.renderer.domElement)
+    this.controls.autoRotate = true
+    this.controls.enableRotate = false
+    this.controls.enableZoom = false
   }
 
   #createClock() {

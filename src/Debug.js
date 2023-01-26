@@ -27,7 +27,7 @@ export class Debug {
     const folder = this.pane.addFolder({ title: 'Scene' })
 
     const params = {
-      background: { r: 18, g: 18, b: 18 }
+      background: { r: 3, g: 3, b: 3 }
     }
 
     folder.addInput(params, 'background', { label: 'Background Color' }).on('change', e => {
