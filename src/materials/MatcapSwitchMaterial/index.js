@@ -12,7 +12,7 @@ export const MatcapSwitchMaterial = new ShaderMaterial({
     u_EffectProgress: { value: 0 },
     u_StripSize: { value: 0.23 },
     u_Time: { value: 0 },
-    u_EmissionColor: { value: new Vector4(168 / 255, 217 / 255, 26 / 255, 1) },
+    u_EmissionColor: { value: new Vector4(26 / 255, 210 / 255, 78 / 255, 1) },
     t_Noise: { value: null },
     t_MatcapA: { value: null },
     t_MatcapB: { value: null },

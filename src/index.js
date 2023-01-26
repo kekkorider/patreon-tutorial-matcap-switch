@@ -7,7 +7,8 @@ import {
   Vector2,
   PlaneGeometry,
   MeshBasicMaterial,
-  RepeatWrapping
+  RepeatWrapping,
+  BufferAttribute
 } from 'three'
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
@@ -145,6 +146,25 @@ class App {
     const gltf = await gltfLoader.load('/suzanne.glb')
 
     this.mesh = gltf.scene.children[0]
+
+    this.mesh.geometry = this.mesh.geometry.toNonIndexed()
+
+    {
+      const centroid = new Float32Array(this.mesh.geometry.getAttribute('position').count*3)
+      const position = this.mesh.geometry.getAttribute('position').array
+
+      for (let i = 0; i < centroid.length; i+=9) {
+        const x = (position[i+0] + position[i+3] + position[i+6]) / 3
+        const y = (position[i+1] + position[i+4] + position[i+7]) / 3
+        const z = (position[i+2] + position[i+5] + position[i+8]) / 3
+
+        centroid.set([x, y, z], i)
+        centroid.set([x, y, z], i+3)
+        centroid.set([x, y, z], i+6)
+      }
+
+      this.mesh.geometry.setAttribute('a_Centroid', new BufferAttribute(centroid, 3, false))
+    }
 
     this.mesh.material = MatcapSwitchMaterial
     this.mesh.material.uniforms.t_Noise.value = this.textures.noise
