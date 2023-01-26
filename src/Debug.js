@@ -42,7 +42,8 @@ export class Debug {
     folder.addInput(material.uniforms.u_StripSize, 'value', { label: 'Size', min: 0, max: 0.5 })
     folder.addInput(material.uniforms.u_NoiseStrength, 'value', { label: 'Noise strength', min: 0, max: 3 })
 
-    this.#createColorUniformControl(mesh, folder, 'u_EmissionColor', 'Emission Color')
+    this.#createColorUniformControl(mesh, folder, 'u_EmissionColorA', 'Emission Color A')
+    this.#createColorUniformControl(mesh, folder, 'u_EmissionColorB', 'Emission Color B')
   }
 
   #createPhysicsConfig() {

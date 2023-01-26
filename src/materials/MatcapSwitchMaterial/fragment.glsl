@@ -7,7 +7,8 @@ uniform float u_EffectProgress;
 uniform float u_StripSize;
 uniform float u_Time;
 uniform float u_NoiseStrength;
-uniform vec3 u_EmissionColor;
+uniform vec3 u_EmissionColorA;
+uniform vec3 u_EmissionColorB;
 
 uniform sampler2D t_MatcapA;
 uniform sampler2D t_MatcapB;
@@ -50,10 +51,13 @@ void main(){
 
   float maskBottom=1.-step(-u_StripSize,maskPositionY);
 
+  // Set the color of the central strip based on the value of `maskPositionY`
+  vec3 emission = mix(u_EmissionColorB, u_EmissionColorA, step(0.0, maskPositionY));
+
   //
   // Final color
   //
-  vec3 outgoingLight = matcapColorA.rgb*maskTop + u_EmissionColor*maskCenter + matcapColorB.rgb*maskBottom;
+  vec3 outgoingLight = matcapColorA.rgb*maskTop + emission*maskCenter + matcapColorB.rgb*maskBottom;
 
   #include <output_fragment>
 }
